@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>روز دختر</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --x: 50%;
+    --y: 40%;
+    --deep: #241236;
+    --violet: #5b2a86;
+    --orchid: #9451c4;
+    --pink: #e57fc0;
+    --lav: #d8b8f0;
+    --paper: #fbf3ff;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+  }
+
+  body{
+    font-family: 'Vazirmatn', sans-serif;
+    color: var(--paper);
+    background:
+      radial-gradient(circle at var(--x) var(--y), #7e3fb0 0%, #4a1f74 32%, #241236 68%, #150a20 100%);
+    transition: background 120ms linear;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    min-height:100vh;
+  }
+
+  /* soft ambient glow blobs */
+  .blob{
+    position:absolute;
+    border-radius:50%;
+    filter: blur(60px);
+    opacity:.55;
+    pointer-events:none;
+    mix-blend-mode: screen;
+  }
+  .blob.b1{ width:38vmax; height:38vmax; background:#a45ce0; top:-10%; left:-8%; animation: float1 16s ease-in-out infinite; }
+  .blob.b2{ width:30vmax; height:30vmax; background:#e57fc0; bottom:-12%; right:-6%; animation: float2 19s ease-in-out infinite; }
+  .blob.b3{ width:22vmax; height:22vmax; background:#6f3fd6; top:55%; left:60%; animation: float3 14s ease-in-out infinite; }
+
+  @keyframes float1{ 0%,100%{ transform: translate(0,0) scale(1);} 50%{ transform: translate(4vw,3vh) scale(1.12);} }
+  @keyframes float2{ 0%,100%{ transform: translate(0,0) scale(1);} 50%{ transform: translate(-5vw,-3vh) scale(1.08);} }
+  @keyframes float3{ 0%,100%{ transform: translate(0,0) scale(1);} 50%{ transform: translate(-3vw,4vh) scale(0.95);} }
+
+  /* ---- stage wrapper ---- */
+  .stage{
+    position:relative;
+    z-index:5;
+    width:min(92vw, 560px);
+    text-align:center;
+    padding: 20px;
+  }
+
+  .card{
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.22);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 26px;
+    padding: 42px 34px;
+    box-shadow: 0 20px 60px rgba(20, 5, 40, 0.45);
+    opacity:0;
+    transform: translateY(18px) scale(.97);
+    animation: rise .7s cubic-bezier(.2,.8,.2,1) forwards;
+  }
+
+  @keyframes rise{
+    to{ opacity:1; transform: translateY(0) scale(1); }
+  }
+
+  .card p{
+    font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+    line-height: 2;
+    font-weight: 500;
+    margin: 0 0 30px;
+    color: var(--paper);
+    text-shadow: 0 2px 18px rgba(0,0,0,.25);
+  }
+
+  .btn{
+    font-family: inherit;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #2b103f;
+    background: linear-gradient(135deg, #f6d9ff, #e0a8f4 60%, #d98fe6);
+    border: none;
+    border-radius: 999px;
+    padding: 14px 40px;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(160, 70, 200, .45);
+    transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+  }
+  .btn:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(160, 70, 200, .6);
+    filter: brightness(1.05);
+  }
+  .btn:active{ transform: translateY(0) scale(.97); }
+
+  .hidden{ display:none; }
+
+  /* ---- final stage extras ---- */
+  .cat-wrap{
+    width: 108px;
+    margin: 0 auto 14px;
+    filter: drop-shadow(0 8px 18px rgba(0,0,0,.35));
+    animation: sway 4s ease-in-out infinite;
+  }
+  @keyframes sway{
+    0%,100%{ transform: rotate(-2deg); }
+    50%{ transform: rotate(2deg); }
+  }
+
+  .title{
+    font-weight: 800;
+    font-size: clamp(1.3rem, 3vw, 1.7rem);
+    margin: 0 0 16px;
+    background: linear-gradient(90deg, #ffd7f2, #e6b8ff 50%, #ffd7f2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* floating hearts layer */
+  #hearts{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:2;
+  }
+  .heart-svg{
+    position:absolute;
+    bottom:-12%;
+    pointer-events:none;
+    filter: drop-shadow(0 0 6px rgba(255,255,255,0.35));
+    animation-name: rise-up;
+    animation-timing-function: ease-in;
+    animation-iteration-count: infinite;
+  }
+  .heart-svg svg{ display:block; width:100%; height:100%; }
+
+  .heart-burst{
+    position:fixed;
+    pointer-events:none;
+    z-index: 6;
+    filter: drop-shadow(0 0 6px rgba(255,255,255,0.45));
+  }
+  .heart-burst svg{ display:block; width:100%; height:100%; }
+
+  @keyframes rise-up{
+    0%{ transform: translateY(0) rotate(0deg); opacity:0; }
+    10%{ opacity:1; }
+    50%{ transform: translateY(-55vh) rotate(10deg); }
+    90%{ opacity:.85; }
+    100%{ transform: translateY(-115vh) rotate(-8deg); opacity:0; }
+  }
+
+  @media (max-width: 480px){
+    .card{ padding: 32px 22px; border-radius: 22px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+  <div id="hearts"></div>
+
+  <div class="stage">
+
+    <div class="card" id="card1">
+      <p>میدونم دیر کردم، ولی می‌خوام بهت یه چیزی بگم…</p>
+      <button class="btn" id="btn1">بگو</button>
+    </div>
+
+    <div class="card hidden" id="card2">
+      <p>امیدوارم بتونی درک کنی که ترک ادب کردم و این حرف رو با یه تاخیر کوچیک بهت گفتم…</p>
+      <button class="btn" id="btn2">باشه، بخشیدمت</button>
+    </div>
+
+    <div class="card hidden" id="card3">
+      <div class="cat-wrap">
+        <!-- cute cat holding a flower -->
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="100" cy="185" rx="55" ry="10" fill="#000" opacity="0.15"/>
+          <!-- tail -->
+          <path d="M150 150 Q185 140 178 105" stroke="#caa2e8" stroke-width="14" fill="none" stroke-linecap="round"/>
+          <!-- body -->
+          <ellipse cx="100" cy="140" rx="52" ry="42" fill="#e7c9f7"/>
+          <!-- head -->
+          <circle cx="100" cy="80" r="46" fill="#f3ddff"/>
+          <!-- ears -->
+          <path d="M62 55 L48 18 L88 42 Z" fill="#f3ddff"/>
+          <path d="M138 55 L152 18 L112 42 Z" fill="#f3ddff"/>
+          <path d="M66 48 L58 28 L82 42 Z" fill="#e79fd6"/>
+          <path d="M134 48 L142 28 L118 42 Z" fill="#e79fd6"/>
+          <!-- cheeks -->
+          <circle cx="72" cy="90" r="9" fill="#ffb3d9" opacity="0.7"/>
+          <circle cx="128" cy="90" r="9" fill="#ffb3d9" opacity="0.7"/>
+          <!-- eyes closed happy -->
+          <path d="M78 76 Q84 68 90 76" stroke="#5a3170" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M110 76 Q116 68 122 76" stroke="#5a3170" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <!-- nose + mouth -->
+          <path d="M97 90 L103 90 L100 95 Z" fill="#c76fa8"/>
+          <path d="M100 95 Q100 100 94 101" stroke="#5a3170" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M100 95 Q100 100 106 101" stroke="#5a3170" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <!-- whiskers -->
+          <path d="M55 84 L30 80 M55 92 L30 94" stroke="#fff" stroke-width="2" opacity="0.8" stroke-linecap="round"/>
+          <path d="M145 84 L170 80 M145 92 L170 94" stroke="#fff" stroke-width="2" opacity="0.8" stroke-linecap="round"/>
+          <!-- paws -->
+          <ellipse cx="70" cy="168" rx="14" ry="10" fill="#f3ddff"/>
+          <ellipse cx="130" cy="168" rx="14" ry="10" fill="#f3ddff"/>
+          <!-- arm holding flower -->
+          <path d="M115 135 Q140 120 150 100" stroke="#e7c9f7" stroke-width="16" fill="none" stroke-linecap="round"/>
+          <!-- flower stem -->
+          <path d="M150 100 L158 60" stroke="#7bbf6a" stroke-width="4" stroke-linecap="round"/>
+          <!-- flower petals -->
+          <g transform="translate(158,52)">
+            <circle cx="0" cy="0" r="8" fill="#ff8fc0"/>
+            <circle cx="9" cy="-3" r="8" fill="#ff8fc0"/>
+            <circle cx="-9" cy="-3" r="8" fill="#ff8fc0"/>
+            <circle cx="5" cy="7" r="8" fill="#ff8fc0"/>
+            <circle cx="-5" cy="7" r="8" fill="#ff8fc0"/>
+            <circle cx="0" cy="0" r="6" fill="#ffe084"/>
+          </g>
+        </svg>
+      </div>
+      <p class="title">روز دختر مبارک 💜</p>
+      <p>روز دختر رو به کیوت‌ترین، زیباترین و خوش‌قلب‌ترین دختر دنیا تبریک می‌گم؛ امیدوارم بانو تاخیر منو ببخشه و عذر بنده رو بپذیره.</p>
+    </div>
+
+  </div>
+
+<script>
+  // interactive gradient follows pointer
+  const root = document.documentElement;
+  function setPos(x, y){
+    root.style.setProperty('--x', x + '%');
+    root.style.setProperty('--y', y + '%');
+  }
+  window.addEventListener('pointermove', (e) => {
+    const x = (e.clientX / window.innerWidth) * 100;
+    const y = (e.clientY / window.innerHeight) * 100;
+    setPos(x, y);
+  });
+  // gentle auto-drift on touch devices / idle
+  let t = 0;
+  setInterval(() => {
+    t += 0.01;
+    setPos(50 + Math.sin(t) * 12, 40 + Math.cos(t * 0.8) * 10);
+  }, 60);
+
+  const card1 = document.getElementById('card1');
+  const card2 = document.getElementById('card2');
+  const card3 = document.getElementById('card3');
+
+  document.getElementById('btn1').addEventListener('click', () => {
+    card1.classList.add('hidden');
+    card2.classList.remove('hidden');
+  });
+
+  document.getElementById('btn2').addEventListener('click', () => {
+    card2.classList.add('hidden');
+    card3.classList.remove('hidden');
+    requestAnimationFrame(() => burstHearts(card3));
+    setTimeout(startHearts, 550);
+  });
+
+  // floating glass hearts (real heart shape via SVG path)
+  const heartColors = [
+    'rgba(255,255,255,0.6)',
+    'rgba(255,182,224,0.7)',
+    'rgba(216,184,240,0.7)',
+    'rgba(178,111,214,0.65)',
+    'rgba(255,143,192,0.7)'
+  ];
+  const HEART_PATH = 'M12,21.35l-1.45-1.32C5.4,15.36,2,12.28,2,8.5 C2,5.42,4.42,3,7.5,3c1.74,0,3.41,0.81,4.5,2.09C13.09,3.81,14.76,3,16.5,3 C19.58,3,22,5.42,22,8.5c0,3.78-3.4,6.86-8.55,11.54L12,21.35z';
+
+  function spawnHeart(){
+    const el = document.createElement('div');
+    el.className = 'heart-svg';
+    const size = 14 + Math.random() * 34;
+    el.style.width = size + 'px';
+    el.style.height = size + 'px';
+    el.style.left = Math.random() * 100 + 'vw';
+    const color = heartColors[Math.floor(Math.random() * heartColors.length)];
+    el.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">' +
+      '<path d="' + HEART_PATH + '" fill="' + color + '" stroke="rgba(255,255,255,0.55)" stroke-width="0.6"/>' +
+      '</svg>';
+    const dur = 7 + Math.random() * 8;
+    el.style.animationDuration = dur + 's';
+    el.style.animationDelay = (Math.random() * 2) + 's';
+    document.getElementById('hearts').appendChild(el);
+    setTimeout(() => el.remove(), (dur + 3) * 1000);
+  }
+
+  let heartsInterval;
+  function startHearts(){
+    for(let i=0;i<14;i++) setTimeout(spawnHeart, i * 120);
+    heartsInterval = setInterval(spawnHeart, 450);
+  }
+
+  // one-off burst: hearts fly out from the left & right edges of the dialog
+  function burstHearts(cardEl){
+    const rect = cardEl.getBoundingClientRect();
+    const count = 26;
+    for(let i=0;i<count;i++){
+      const el = document.createElement('div');
+      el.className = 'heart-burst';
+      const size = 12 + Math.random() * 26;
+      el.style.width = size + 'px';
+      el.style.height = size + 'px';
+
+      const side = i % 2 === 0 ? -1 : 1; // -1: left side, 1: right side
+      const startY = rect.top + Math.random() * rect.height;
+      const startX = side === -1 ? rect.left : rect.right;
+      el.style.left = startX + 'px';
+      el.style.top = startY + 'px';
+
+      const color = heartColors[Math.floor(Math.random() * heartColors.length)];
+      el.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">' +
+        '<path d="' + HEART_PATH + '" fill="' + color + '" stroke="rgba(255,255,255,0.55)" stroke-width="0.6"/>' +
+        '</svg>';
+      document.body.appendChild(el);
+
+      const distX = side * (70 + Math.random() * 170);
+      const distY = (Math.random() - 0.65) * 180;
+      const rot = (Math.random() * 70 - 35);
+      const dur = 900 + Math.random() * 700;
+
+      const anim = el.animate([
+        { transform: 'translate(0,0) scale(0.3) rotate(0deg)', opacity: 0 },
+        { transform: `translate(${distX * 0.35}px, ${distY * 0.35}px) scale(1) rotate(${rot * 0.4}deg)`, opacity: 1, offset: 0.3 },
+        { transform: `translate(${distX}px, ${distY}px) scale(0.85) rotate(${rot}deg)`, opacity: 0 }
+      ], { duration: dur, easing: 'ease-out', delay: Math.random() * 260, fill: 'forwards' });
+
+      anim.onfinish = () => el.remove();
+    }
+  }
+</script>
+</body>
+</html>
